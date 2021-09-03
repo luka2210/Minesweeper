@@ -11,7 +11,7 @@ import java.awt.event.MouseEvent;
 
 public class Polje {
 	JLabel label;
-	int i, j, m, n;
+	int i, j;
 	boolean mina;
 	Polje[][] polja;
 	Vector<Polje> susednaPolja;
@@ -19,19 +19,20 @@ public class Polje {
 	int vrednost;
 	boolean minaObelezeno;
 	
+	GlavniProzor gp;
+	
 	static int visina = 20;
 	static int sirina = 20;
 	
-	public Polje(int i, int j, int m, int n, int brPolja, int brMina, Polje[][] polja, JFrame frame) {
+	public Polje(int i, int j, int brPolja, int brMina, GlavniProzor gp) {
+		this.gp = gp;
 		this.i = i;
 		this.j = j;
-		this.m = m;
-		this.n = n;
-		this.polja = polja;
+		this.polja = gp.polja;
 		otvoreno = false;
 		minaObelezeno = false;
 		vrednost = 0;
-		labelInit(frame);
+		labelInit(gp.frame);
 		mina = minaInit(brMina, brPolja);
 	}
 	
@@ -44,21 +45,32 @@ public class Polje {
 	
 	void poljeKliknuto() {
 		if (otvoreno || minaObelezeno) return;
+		
 		if (mina) {
 			gameOver();
 			labelMina();
 		}
-		else
+		else {
 			labelVrednost();
+			gameWon();
+		}
 	}
 	
 	void poljeKliknutoDesniKlik() {
-		if (otvoreno) return;
-		if (minaObelezeno) 
+		if (otvoreno || (!minaObelezeno && gp.brNeobelezenihMina == 0)) return;
+		
+		if (minaObelezeno) { 
+			gp.brNeobelezenihMina++;
 			label.setIcon(new ImageIcon(PocetniProzor.class.getResource("/Slike/polje.png")));
-		else 
+		}
+		else { 
+			gp.brNeobelezenihMina--;
 			label.setIcon(new ImageIcon(PocetniProzor.class.getResource("/Slike/poljeObelezeno.png")));
+		}
+		
 		minaObelezeno = !minaObelezeno;
+		
+		gp.ispisiBrojNeobelezenihMina();
 	}
 	
 	void poljeKliknutoSrednjiKlik() {
@@ -114,7 +126,7 @@ public class Polje {
 	
 		for (int i_val: i_vals)
 			for (int j_val: j_vals) 
-				if (i_val >= 0 && i_val < m && j_val >=0 && j_val < n && (i_val != i || j_val != j))
+				if (i_val >= 0 && i_val < gp.m && j_val >=0 && j_val < gp.n && (i_val != i || j_val != j))
 					susednaPolja.add(polja[i_val][j_val]);
 	}
 	
@@ -158,6 +170,24 @@ public class Polje {
 		minaObelezeno = false;
 	}
 	
+	private void gameWon() {
+		int brOtvorenihPolja = 0;
+		for (Polje[] redPolja: polja)
+			for (Polje polje: redPolja)
+				if (polje.otvoreno)
+					brOtvorenihPolja++;
+		
+		if (brOtvorenihPolja != gp.m * gp.n - gp.brMina) return;
+		
+		for (Polje[] redPolja: polja)
+			for (Polje polje: redPolja) {
+				if (!polje.minaObelezeno && polje.mina) 
+					polje.label.setIcon(new ImageIcon(PocetniProzor.class.getResource("/Slike/poljeObelezeno.png")));
+				polje.otvoreno = true;
+			}
+		gp.dugmeReset.setIcon(new ImageIcon(PocetniProzor.class.getResource("/Slike/dugmeResetWon.png")));
+	}
+	
 	private void gameOver() {
 		for (Polje[] redPolja: polja)
 			for (Polje polje: redPolja) {
@@ -167,5 +197,6 @@ public class Polje {
 					polje.label.setIcon(new ImageIcon(PocetniProzor.class.getResource("/Slike/poljePogresnoObelezeno.png")));
 				polje.otvoreno = true;
 			}
+		gp.dugmeReset.setIcon(new ImageIcon(PocetniProzor.class.getResource("/Slike/dugmeResetLost.png")));
 	}
 }
