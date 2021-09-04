@@ -1,5 +1,6 @@
 package Glavni;
 
+import Resavac.PoljeRes;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.SwingUtilities;
@@ -21,13 +22,13 @@ public class Polje {
 	private boolean nijeMina;
 	private GlavniProzor gp;
 	
-	static int brPoljaInit;
-	static int brMinaInit;
+	private static int brPoljaInit;
+	private static int brMinaInit;
 	
 	static final int visina = 20;
 	static final int sirina = 20;
 	
-	public Polje(int i, int j, GlavniProzor gp) {
+	Polje(int i, int j, GlavniProzor gp) {
 		this.gp = gp;
 		this.i = i;
 		this.j = j;
@@ -40,7 +41,7 @@ public class Polje {
 		nijeMina = false;
 	}
 	
-	void prviKlik() {
+	private void prviKlik() {
 		//inicijalizuj susedna polja
 		for (Polje[] redPolja: polja)
 			for (Polje polje: redPolja) 
@@ -63,9 +64,12 @@ public class Polje {
 		for (Polje[] redPolja: polja)
 			for (Polje polje: redPolja)
 				polje.brSusednihMinaInit();
+		
+		//pokreni timer
+		gp.timer.start();
 	}
 	
-	void poljeKliknuto() {
+	private void poljeKliknuto() {
 		if (otvoreno || minaObelezeno) return;
 		
 		if (gp.prviKlik) {
@@ -83,7 +87,7 @@ public class Polje {
 		}
 	}
 	
-	void poljeKliknutoDesniKlik() {
+	private void poljeKliknutoDesniKlik() {
 		if (otvoreno || (!minaObelezeno && gp.brNeobelezenihMina == 0)) return;
 		
 		if (minaObelezeno) { 
@@ -100,7 +104,7 @@ public class Polje {
 		gp.ispisiBrojNeobelezenihMina();
 	}
 	
-	void poljeKliknutoSrednjiKlik() {
+	private void poljeKliknutoSrednjiKlik() {
 		if (!otvoreno || minaObelezeno) return;
 		
 		int brSusednihMinaTemp = 0;
@@ -232,6 +236,11 @@ public class Polje {
 				polje.otvoreno = true;
 			}
 		gp.dugmeReset.setIcon(new ImageIcon(PocetniProzor.class.getResource("/Slike/dugmeResetWon.png")));
+		
+		gp.brNeobelezenihMina = 0;
+		gp.ispisiBrojNeobelezenihMina();
+		gp.timer.stop();
+		gp.gameWon = true;
 	}
 	
 	private void gameOver() {
@@ -244,5 +253,12 @@ public class Polje {
 				polje.otvoreno = true;
 			}
 		gp.dugmeReset.setIcon(new ImageIcon(PocetniProzor.class.getResource("/Slike/dugmeResetLost.png")));
+		
+		gp.timer.stop();
+		gp.gameLost = true;
+	}
+	
+	public PoljeRes toPoljeRes() {
+		return new PoljeRes(i, j, otvoreno, minaObelezeno, brSusednihMina);
 	}
 }

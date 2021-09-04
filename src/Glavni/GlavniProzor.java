@@ -1,5 +1,7 @@
 package Glavni;
 
+import java.awt.event.*;
+import javax.swing.Timer;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -14,16 +16,22 @@ public class GlavniProzor {
 	int pozX;
 	int pozY;
 	Polje[][] polja;
-	
 	Integer m; 
 	Integer n; 
 	Integer brMina;
 	Integer brNeobelezenihMina;
+	boolean prviKlik;
 	
 	JLabel cifra1, cifra2, cifra3;
 	JLabel dugmeReset;
 	
-	boolean prviKlik;
+	Timer timer;
+	int prosloVreme;
+	JLabel timerCifra1, timerCifra2, timerCifra3;
+	
+	boolean gameWon;
+	boolean gameLost;
+	
 	/**
 	 * Create the application.
 	 */
@@ -35,6 +43,8 @@ public class GlavniProzor {
 		this.pozX = pozX;
 		this.pozY = pozY;
 		this.prviKlik = true;
+		this.gameWon = false;
+		this.gameLost = false;
 		initialize();
 	}
 
@@ -84,6 +94,24 @@ public class GlavniProzor {
 		
 		ispisiBrojNeobelezenihMina();
 		
+		timerCifra1 = new JLabel("");
+		timerCifra1.setBounds(frame.getWidth() - 3 * 27 - 15, 10, 27, 40);
+		frame.getContentPane().add(timerCifra1);
+		
+		timerCifra2 = new JLabel("");
+		timerCifra2.setBounds(frame.getWidth() - 2 * 27 - 15, 10, 27, 40);
+		frame.getContentPane().add(timerCifra2);
+		
+		timerCifra3 = new JLabel("");
+		timerCifra3.setBounds(frame.getWidth() - 1 * 27 - 15, 10, 27, 40);
+		frame.getContentPane().add(timerCifra3);
+		
+		ispisiProtekloVreme();
+		
+		//inicijalizacija tajmera
+		timer = new Timer(1000, taskPerformer);
+		timer.setRepeats(true);
+		timer.setInitialDelay(0);
 		
 		//inicijalizacija polja
 		polja = new Polje[m][n];
@@ -91,6 +119,12 @@ public class GlavniProzor {
 		for (int i = 0; i < m; i++)
 			for (int j = 0; j < n; j++) 
 				polja[i][j] = new Polje(i, j, this);
+	}
+	
+	void ispisiProtekloVreme() {
+		ispisiCifru(timerCifra1, this.prosloVreme / 100);
+		ispisiCifru(timerCifra2, (this.prosloVreme % 100) / 10);
+		ispisiCifru(timerCifra3, this.prosloVreme % 10);
 	}
 	
 	void ispisiBrojNeobelezenihMina() {
@@ -133,4 +167,14 @@ public class GlavniProzor {
 			break;
 		}
 	}
+	
+	private ActionListener taskPerformer = new ActionListener() {
+        public void actionPerformed(ActionEvent evt) {
+            ispisiProtekloVreme();
+            prosloVreme++;
+            
+            if (prosloVreme >= 1000) 
+            	timer.stop();
+        }
+    };
 }
