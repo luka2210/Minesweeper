@@ -48,6 +48,7 @@ public class PocetniProzor {
 		frame = new JFrame();
 		frame.setBounds(100, 100, 450, 300);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setResizable(false);
 		frame.getContentPane().setLayout(null);
 		
 		unosBrPoljaM = new JTextField();
@@ -87,9 +88,9 @@ public class PocetniProzor {
 			m = Integer.parseInt(unosBrPoljaM.getText());
 			n = Integer.parseInt(unosBrPoljaN.getText());
 			brMina = Integer.parseInt(unosBrMina.getText());
-			if (!(inRange(m, 10, 100))) throw new Exception("Висина табле мора бити цео број између 10 и 100.");
-			if (!(inRange(n, 10, 100))) throw new Exception("Ширина табле мора бити цео број између 10 и 100.");
-			if (!(inRange(brMina, 1, n * m /3))) throw new Exception("Број мина за унете димензије табле мора бити цео број између 1 и " + n * m / 3 + ".");
+			if (!(inRange(m, 10, 40))) throw new Exception("Висина табле мора бити цео број између 10 и 40.");
+			if (!(inRange(n, 10, 80))) throw new Exception("Ширина табле мора бити цео број између 10 и 80.");
+			if (!(inRange(brMina, 1, n * m - 9))) throw new Exception("Број мина за унете димензије табле мора бити цео број између 1 и " + (n * m - 9) + ".");
 			return true;
 		}
 		catch (NumberFormatException err) {

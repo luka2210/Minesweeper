@@ -10,48 +10,75 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 public class Polje {
-	JLabel label;
-	int i, j;
-	boolean mina;
-	Polje[][] polja;
-	Vector<Polje> susednaPolja;
-	boolean otvoreno;
-	int vrednost;
-	boolean minaObelezeno;
+	private JLabel label;
+	private int i, j;
+	private boolean mina;
+	private Polje[][] polja;
+	private Vector<Polje> susednaPolja;
+	private boolean otvoreno;
+	private int brSusednihMina;
+	private boolean minaObelezeno;
+	private boolean nijeMina;
+	private GlavniProzor gp;
 	
-	GlavniProzor gp;
+	static int brPoljaInit;
+	static int brMinaInit;
 	
-	static int visina = 20;
-	static int sirina = 20;
+	static final int visina = 20;
+	static final int sirina = 20;
 	
-	public Polje(int i, int j, int brPolja, int brMina, GlavniProzor gp) {
+	public Polje(int i, int j, GlavniProzor gp) {
 		this.gp = gp;
 		this.i = i;
 		this.j = j;
 		this.polja = gp.polja;
+		dugmeInit(gp.frame);
 		otvoreno = false;
 		minaObelezeno = false;
-		vrednost = 0;
-		labelInit(gp.frame);
-		mina = minaInit(brMina, brPolja);
+		mina = false;
+		brSusednihMina = 0;
+		nijeMina = false;
 	}
 	
-	public void poljeInit() {
-		susednaPoljaInit();
-		for (Polje polje: susednaPolja) 
-			if (polje.mina)
-				vrednost++;
+	void prviKlik() {
+		//inicijalizuj susedna polja
+		for (Polje[] redPolja: polja)
+			for (Polje polje: redPolja) 
+				polje.susednaPoljaInit();
+		
+		//polje na koje je prvo kliknuto i sva susedna nisu mine
+		nijeMina = true;
+		for (Polje polje: susednaPolja)
+			polje.nijeMina = true;
+		
+		//postavi mine na ostalim poljima
+		Polje.brPoljaInit = gp.n * gp.m - 1 - susednaPolja.size();
+		Polje.brMinaInit = gp.brMina;
+		
+		for (Polje[] redPolja: polja)
+			for (Polje polje: redPolja)
+				polje.mina = polje.minaInit();
+		
+		//postavi brSusednihMinai u zavisnosti od mina
+		for (Polje[] redPolja: polja)
+			for (Polje polje: redPolja)
+				polje.brSusednihMinaInit();
 	}
 	
 	void poljeKliknuto() {
 		if (otvoreno || minaObelezeno) return;
 		
+		if (gp.prviKlik) {
+			gp.prviKlik = false;
+			prviKlik();
+		}
+		
 		if (mina) {
 			gameOver();
-			labelMina();
+			obeleziMinu();
 		}
 		else {
-			labelVrednost();
+			obeleziPolje();
 			gameWon();
 		}
 	}
@@ -74,16 +101,19 @@ public class Polje {
 	}
 	
 	void poljeKliknutoSrednjiKlik() {
-		if (!otvoreno || mina) return;
-		int vrednostTemp = 0;
+		if (!otvoreno || minaObelezeno) return;
+		
+		int brSusednihMinaTemp = 0;
 		for (Polje polje: susednaPolja)
-			if (polje.minaObelezeno) vrednostTemp++;
-		if (vrednost != vrednostTemp) return;
+			if (polje.minaObelezeno) brSusednihMinaTemp++;
+		
+		if (brSusednihMina != brSusednihMinaTemp) return;
+		
 		for (Polje polje: susednaPolja) 
 			polje.poljeKliknuto();
 	}
 	
-	private void labelInit(JFrame frame) {
+	private void dugmeInit(JFrame frame) {
 		label = new JLabel();
 		label.setIcon(new ImageIcon(PocetniProzor.class.getResource("/Slike/polje.png")));
 		label.addMouseListener(new MouseAdapter() {
@@ -114,13 +144,29 @@ public class Polje {
 		frame.getContentPane().add(label);
 	}
 	
-	private boolean minaInit(int brMina, int brPolja) {
+	private void brSusednihMinaInit() {
+		if (mina) return;
+		
+		for (Polje polje: susednaPolja) 
+			if (polje.mina)
+				brSusednihMina++;
+	}
+	
+	private boolean minaInit() {
+		if (nijeMina) 
+			return false;
+		
 		Random rand = new Random();
-		return rand.nextDouble() <= (1.0 * brMina) / brPolja;
+		if (rand.nextDouble() <= (1.0 * Polje.brMinaInit) / Polje.brPoljaInit--) {
+			Polje.brMinaInit--;
+			return true;
+		}
+		return false;
 	}
 	
 	private void susednaPoljaInit() { 
 		susednaPolja = new Vector<Polje>();
+		
 		int[] i_vals = {i-1, i, i+1};
 		int[] j_vals = {j-1, j, j+1};
 	
@@ -130,9 +176,9 @@ public class Polje {
 					susednaPolja.add(polja[i_val][j_val]);
 	}
 	
-	private void labelVrednost() {
+	private void obeleziPolje() {
 		otvoreno = true;
-		switch (vrednost) {
+		switch (brSusednihMina) {
 		case 0:
 			label.setIcon(new ImageIcon(PocetniProzor.class.getResource("/Slike/poljePrazno.png")));
 			for (Polje polje: susednaPolja) 
@@ -165,7 +211,7 @@ public class Polje {
 		}
 	}
 	
-	private void labelMina() {
+	private void obeleziMinu() {
 		label.setIcon(new ImageIcon(PocetniProzor.class.getResource("/Slike/poljeGreska.png")));
 		minaObelezeno = false;
 	}

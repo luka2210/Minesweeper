@@ -11,15 +11,19 @@ import java.awt.SystemColor;
 public class GlavniProzor {
 
 	JFrame frame;
-	JLabel dugmeReset;
 	int pozX;
 	int pozY;
 	Polje[][] polja;
 	
-	Integer m, n, brMina;
+	Integer m; 
+	Integer n; 
+	Integer brMina;
 	Integer brNeobelezenihMina;
 	
 	JLabel cifra1, cifra2, cifra3;
+	JLabel dugmeReset;
+	
+	boolean prviKlik;
 	/**
 	 * Create the application.
 	 */
@@ -30,6 +34,7 @@ public class GlavniProzor {
 		this.brNeobelezenihMina = brMina;
 		this.pozX = pozX;
 		this.pozY = pozY;
+		this.prviKlik = true;
 		initialize();
 	}
 
@@ -42,6 +47,7 @@ public class GlavniProzor {
 		frame.setBounds(pozX, pozY, Polje.sirina * n + 15, Polje.visina * m + 99);
 		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
+		frame.setResizable(false);
 		frame.setVisible(true);
 		
 		dugmeReset = new JLabel("");
@@ -60,36 +66,31 @@ public class GlavniProzor {
 				GlavniProzor gp = new GlavniProzor(m, n, brMina, frame.getX(), frame.getY());
 			}
 		});
-		dugmeReset.setBounds(frame.getWidth() / 2 - 20, 10, 40, 40);
+		dugmeReset.setBounds(frame.getWidth() / 2 - 28, 10, 40, 40);
 		dugmeReset.setIcon(new ImageIcon(PocetniProzor.class.getResource("/Slike/dugmeReset.png")));
 		frame.getContentPane().add(dugmeReset);
 		
 		cifra1 = new JLabel("");
-		cifra1.setBounds(5, 10, 27, 40);
+		cifra1.setBounds(0, 10, 27, 40);
 		frame.getContentPane().add(cifra1);
 		
 		cifra2 = new JLabel("");
-		cifra2.setBounds(5 + 27, 10, 27, 40);
+		cifra2.setBounds(27, 10, 27, 40);
 		frame.getContentPane().add(cifra2);
 		
 		cifra3 = new JLabel("");
-		cifra3.setBounds(5 + 27 * 2, 10, 27, 40);
+		cifra3.setBounds(27 * 2, 10, 27, 40);
 		frame.getContentPane().add(cifra3);
 		
 		ispisiBrojNeobelezenihMina();
 		
+		
+		//inicijalizacija polja
 		polja = new Polje[m][n];
-		int brPolja = m * n;
-		int brMina_temp = brMina;
+		
 		for (int i = 0; i < m; i++)
-			for (int j = 0; j < n; j++) {
-				polja[i][j] = new Polje(i, j, brPolja, brMina_temp, this);
-				brPolja--;
-				if (polja[i][j].mina) brMina_temp--;
-			}
-		for (int i = 0; i < m; i++)
-			for (int j = 0; j < n; j++)
-				polja[i][j].poljeInit();
+			for (int j = 0; j < n; j++) 
+				polja[i][j] = new Polje(i, j, this);
 	}
 	
 	void ispisiBrojNeobelezenihMina() {
