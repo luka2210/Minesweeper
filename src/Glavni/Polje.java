@@ -11,7 +11,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 public class Polje {
-	private JLabel label;
+	JLabel label;
 	private int i, j;
 	private boolean mina;
 	private Polje[][] polja;
@@ -129,6 +129,9 @@ public class Polje {
 					poljeKliknutoSrednjiKlik();
 				else 
 					poljeKliknuto();
+				
+				if (gp.autoSolve)
+					gp.ukljuciResavac();
 			}
 			@Override
 			public void mousePressed(MouseEvent e) {
@@ -261,4 +264,5 @@ public class Polje {
 	public PoljeRes toPoljeRes() {
 		return new PoljeRes(i, j, otvoreno, minaObelezeno, brSusednihMina);
 	}
+
 }

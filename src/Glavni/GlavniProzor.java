@@ -1,13 +1,20 @@
 package Glavni;
 
+import Resavac.*;
+import java.util.Vector;
 import java.awt.event.*;
 import javax.swing.Timer;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
+
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowEvent;
+import java.awt.Point;
+import java.awt.Robot;
 import java.awt.SystemColor;
 
 public class GlavniProzor {
@@ -32,6 +39,9 @@ public class GlavniProzor {
 	boolean gameWon;
 	boolean gameLost;
 	
+	boolean autoSolve = false;
+	int delay;
+	
 	/**
 	 * Create the application.
 	 */
@@ -45,6 +55,7 @@ public class GlavniProzor {
 		this.prviKlik = true;
 		this.gameWon = false;
 		this.gameLost = false;
+		this.delay = 100;
 		initialize();
 	}
 
@@ -72,8 +83,14 @@ public class GlavniProzor {
 			}
 			@Override 
 			public void mouseClicked(MouseEvent e) {
-				frame.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
-				GlavniProzor gp = new GlavniProzor(m, n, brMina, frame.getX(), frame.getY());
+				if (SwingUtilities.isRightMouseButton(e)) {
+					ukljuciResavac();
+					autoSolve = true;
+				}
+				else {
+					frame.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
+					GlavniProzor gp = new GlavniProzor(m, n, brMina, frame.getX(), frame.getY());
+				}
 			}
 		});
 		dugmeReset.setBounds(frame.getWidth() / 2 - 28, 10, 40, 40);
@@ -119,6 +136,24 @@ public class GlavniProzor {
 		for (int i = 0; i < m; i++)
 			for (int j = 0; j < n; j++) 
 				polja[i][j] = new Polje(i, j, this);
+	}
+	
+	void ukljuciResavac() {
+		PoljeRes[][] poljaRes = new PoljeRes[m][n];
+		for (int i = 0; i < m; i++)
+			for (int j = 0; j < n; j++)
+				poljaRes[i][j] = polja[i][j].toPoljeRes();
+		
+		PoljeRes resenje = Resavac.nadjiResenja(m, n, poljaRes, brNeobelezenihMina, gameWon, gameLost, prviKlik);
+		System.out.println(resenje);
+		System.out.println();
+		
+		try {
+			autoClicker(resenje);
+		}
+		catch (Exception e) {
+			JOptionPane.showMessageDialog(null, "Дошло је до грешке.", "Грешка извршавања", JOptionPane.INFORMATION_MESSAGE);
+		}
 	}
 	
 	void ispisiProtekloVreme() {
@@ -169,6 +204,7 @@ public class GlavniProzor {
 	}
 	
 	private ActionListener taskPerformer = new ActionListener() {
+
         public void actionPerformed(ActionEvent evt) {
             ispisiProtekloVreme();
             prosloVreme++;
@@ -177,4 +213,32 @@ public class GlavniProzor {
             	timer.stop();
         }
     };
+    
+    private void autoClicker(PoljeRes resenje) throws Exception {
+    	//ako nema resenja prekini izvrsavanje
+    	if (resenje == null) {
+    		autoSolve = false;
+    		return;
+    	}
+    	
+    	//polje na koje treba da se klikne
+    	Polje klikniNa = polja[resenje.i][resenje.j];
+    	
+    	//levi, srednji ili desni klik
+    	int button = InputEvent.BUTTON1_DOWN_MASK;
+    	if (resenje.klik == 2)
+    		button = InputEvent.BUTTON3_DOWN_MASK;
+    	else if (resenje.klik == 3)
+    		button = InputEvent.BUTTON2_DOWN_MASK;
+    		
+    	//klikni na dugme
+    	Robot r = new Robot();
+    	Point p = SwingUtilities.convertPoint(klikniNa.label, 0, 0, frame);
+    	r.mouseMove(p.x + frame.getX() + 10, p.y + frame.getY() + 10);
+    	r.mousePress(button);
+    	r.mouseRelease(button);
+    	
+    	//pauza
+		Thread.sleep(delay);
+    }
 }
