@@ -55,7 +55,7 @@ public class GlavniProzor {
 		this.prviKlik = true;
 		this.gameWon = false;
 		this.gameLost = false;
-		this.delay = 100;
+		this.delay = 50;
 		initialize();
 	}
 
@@ -86,6 +86,9 @@ public class GlavniProzor {
 				if (SwingUtilities.isRightMouseButton(e)) {
 					ukljuciResavac();
 					autoSolve = true;
+				}
+				else if (SwingUtilities.isMiddleMouseButton(e)) {
+					ukljuciResavac();
 				}
 				else {
 					frame.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));

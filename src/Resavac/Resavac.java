@@ -5,6 +5,9 @@ import java.util.Vector;
 import Glavni.Polje;
 
 public class Resavac {
+	private static Vector<PoljeRes> otvorenaPolja;
+	private static Vector<PoljeRes> neotvorenaPolja;
+	private static Vector<PoljeRes> marginalnaPolja;
 	private static int brResenja;
 	
 	public static PoljeRes nadjiResenja(int m, int n, PoljeRes[][] polja, int brNeobelezenihMina, boolean gameWon, boolean gameLost, boolean prviKlik) {
@@ -23,36 +26,36 @@ public class Resavac {
 		Resavac.susednaPoljaInit(m, n, polja);
 		
 		//napravi listu svih otvorenih polja koja imaju za suseda bar jedno neotvoreno polje koje nije obelezeno kao mina
-		Vector<PoljeRes> otvorenaPolja = Resavac.nadjiOtvorenaPolja(polja);
+		Resavac.nadjiOtvorenaPolja(polja);
 		
 		//napravi listu svih neotvorenih polja koja nisu obelezena kao mine i koja za suseda imaju bar jedno otvoreno polje
-		Vector<PoljeRes> neotvorenaPolja = Resavac.nadjiNeotvorenaPolja(polja);
+		Resavac.nadjiNeotvorenaPolja(polja);
+		
+		//napravi listu svih neotvorenih polja nija nisu obelezena kao mine i koja nemaju susedna otvorena polja
+		Resavac.nadjiMarginalnaPolja(polja);
 			
 		//ako nema otvorenih vrati random polje
-		//!prepravi ovo jer ne vraca nista!
 		if (otvorenaPolja.isEmpty())
-			return null;
+			return marginalnaPolja.get(marginalnaPolja.size() / 2);
 		
 		//ako postoji otvoreno polje oko kojih sigurno nema mina 
 		//ili neotvoreno koje je sigurno mina
 		for (PoljeRes polje: otvorenaPolja) {
-			int razlika = polje.brSusednihMina;
+			polje.razlika = polje.brSusednihMina;
 			for (PoljeRes susednoPolje: polje.susednaPolja) 
 				if (susednoPolje.minaObelezeno) 
-					razlika--;
+					polje.razlika--;
 				
-			if (razlika == 0) {
+			if (polje.razlika == 0) {
 				polje.klik = 3;
 				return polje;
 			}
-			else if (razlika == polje.susednaPoljaNeotvorena.size()) 
+			else if (polje.razlika == polje.susednaPoljaNeotvorena.size()) 
 				for (PoljeRes susednoPolje: polje.susednaPoljaNeotvorena) {
 					susednoPolje.klik = 2;
 					return susednoPolje;
 				}
 		}
-		
-		//Resavac.ispisOtvorenih(otvorenaPolja);
 		
 		//ako ima previse kombinacija da bi mogao da izracuna verovatnocu vrati random polje kao resenje
 		//if (otvorenaPolja.size() > 30) 
@@ -60,7 +63,7 @@ public class Resavac {
 		
 		//poziv rekurzivne funkcije koja proverava sve kombinacije
 		brResenja = 0;
-		rekurzijaOtvoreno(otvorenaPolja, 0, otvorenaPolja.size(), neotvorenaPolja, brNeobelezenihMina);
+		Resavac.prostaRekurzija(0, neotvorenaPolja.size());
 		
 		//izracunaj verovatnocu da na svakom polju bude mina
 		System.out.println();
@@ -73,7 +76,7 @@ public class Resavac {
 		//odredi koje polje ima najvecu verovatnocu da se na njemu nalazi ili ne nalazi mina
 		resenje = neotvorenaPolja.get(0);
 		for (PoljeRes polje: neotvorenaPolja) 
-			if (min(polje.verovatnoca, 1 - polje.verovatnoca) < min(resenje.verovatnoca, 1 - polje.verovatnoca)) 
+			if (min(polje.verovatnoca, 1.0 - polje.verovatnoca) < min(resenje.verovatnoca, 1.0 - resenje.verovatnoca)) 
 				resenje = polje;
 		
 		if (resenje.verovatnoca > 0.5)
@@ -82,55 +85,61 @@ public class Resavac {
 		return resenje;
 	}
 	
-	private static void rekurzijaOtvoreno(Vector<PoljeRes> otvorenaPolja, int i, int otvorenaPoljaSize, Vector<PoljeRes> neotvorenaPolja, int brNeobelezenihMina) {
-		if (brResenja > 1000000)
-			return;
-		
-		if (otvorenaPoljaSize == i) {
-			brResenja++;
+	private static void prostaRekurzija(int i, int n) {
+		if (i == n) {
 			for (PoljeRes polje: neotvorenaPolja) 
 				if (polje.minaObelezeno)
 					polje.brPutaObelezeno++;
+			
+			brResenja++;
 			return;
 		}
 		
-		PoljeRes trPolje = otvorenaPolja.get(i);
-		int razlika = trPolje.brSusednihMina;
-		for (PoljeRes polje: trPolje.susednaPolja) 
-			if (polje.minaObelezeno) 
-				razlika--;
-		
-		if (razlika < 0 || razlika > brNeobelezenihMina) 
-			return;
-		
-		rekurzijaNeotvoreno(trPolje.susednaPoljaNeotvorena, 0, razlika, otvorenaPolja, i, otvorenaPoljaSize, neotvorenaPolja, brNeobelezenihMina);
-	}
+		PoljeRes trPolje = neotvorenaPolja.get(i);
 	
-	private static void rekurzijaNeotvoreno(Vector<PoljeRes> poljaObradi, int i_po, int razlika, Vector<PoljeRes> otvorenaPolja, int i, int otvorenaPoljaSize, Vector<PoljeRes> neotvorenaPolja, int brNeobelezenihMina) {
-		if (razlika == 0) {
-			for (PoljeRes polje: poljaObradi)
-				polje.obradjeno = true;
-			rekurzijaOtvoreno(otvorenaPolja, i + 1, otvorenaPoljaSize, neotvorenaPolja, brNeobelezenihMina);
-			for (PoljeRes polje: poljaObradi)
-				polje.obradjeno = false;
-			return;
+		if (mozePrazno(trPolje)) {
+			for (PoljeRes susednoOtvoreno: trPolje.susednaPoljaOtvorena) 
+				susednoOtvoreno.brSusednihNeotvorenih--;
+			
+			prostaRekurzija(i + 1, n);
+			
+			for (PoljeRes susednoOtvoreno: trPolje.susednaPoljaOtvorena) 
+				susednoOtvoreno.brSusednihNeotvorenih++;
 		}
 		
-		if (razlika > poljaObradi.size() - i_po)
-			return;
-		
-		rekurzijaNeotvoreno(poljaObradi, i_po + 1, razlika, otvorenaPolja, i, otvorenaPoljaSize, neotvorenaPolja, brNeobelezenihMina);
-		
-		if (poljaObradi.get(i_po).obradjeno) 
-			return;
-		
-		poljaObradi.get(i_po).minaObelezeno = true;
-		rekurzijaNeotvoreno(poljaObradi, i_po + 1, razlika - 1, otvorenaPolja, i, otvorenaPoljaSize, neotvorenaPolja, brNeobelezenihMina - 1);
-		poljaObradi.get(i_po).minaObelezeno = false;
+		if (mozeMina(trPolje)) {
+			for (PoljeRes susednoOtvoreno: trPolje.susednaPoljaOtvorena) { 
+				susednoOtvoreno.brSusednihNeotvorenih--;
+				susednoOtvoreno.razlika--;
+			}
+			
+			trPolje.minaObelezeno = true;
+			prostaRekurzija(i + 1, n);
+			trPolje.minaObelezeno = false;
+			
+			for (PoljeRes susednoOtvoreno: trPolje.susednaPoljaOtvorena) { 
+				susednoOtvoreno.brSusednihNeotvorenih++;
+				susednoOtvoreno.razlika++;
+			}
+		}
 	}
 	
-	private static Vector<PoljeRes> nadjiNeotvorenaPolja(PoljeRes[][] polja) {
-		Vector<PoljeRes> neotvorenaPolja = new Vector<PoljeRes>();
+	private static boolean mozePrazno(PoljeRes trPolje) {
+		for (PoljeRes susednoOtvoreno: trPolje.susednaPoljaOtvorena) 
+			if (susednoOtvoreno.brSusednihNeotvorenih == susednoOtvoreno.razlika)
+				return false;
+		return true;
+	}
+	
+	private static boolean mozeMina(PoljeRes trPolje) {
+		for (PoljeRes susednoOtvoreno: trPolje.susednaPoljaOtvorena) 
+			if (susednoOtvoreno.razlika - 1 < 0)
+				return false;
+		return true;
+	}
+	
+	private static void nadjiNeotvorenaPolja(PoljeRes[][] polja) {
+		neotvorenaPolja = new Vector<PoljeRes>();
 		
 		for (PoljeRes[] redPolja: polja) 
 			for (PoljeRes polje: redPolja) 
@@ -140,12 +149,10 @@ public class Resavac {
 							neotvorenaPolja.add(polje);
 							break;
 						}
-		
-		return neotvorenaPolja;
 	}
 	
-	private static Vector<PoljeRes> nadjiOtvorenaPolja(PoljeRes[][] polja) {
-		Vector<PoljeRes> otvorenaPolja = new Vector<PoljeRes>();
+	private static void nadjiOtvorenaPolja(PoljeRes[][] polja) {
+		otvorenaPolja = new Vector<PoljeRes>();
 		
 		for (PoljeRes[] redPolja: polja) 
 			for (PoljeRes polje: redPolja) 
@@ -155,8 +162,20 @@ public class Resavac {
 							otvorenaPolja.add(polje);
 							break;
 						}
+	}
+	
+	private static Vector<PoljeRes> nadjiMarginalnaPolja(PoljeRes[][] polja) {
+		marginalnaPolja = new Vector<PoljeRes>();
 		
-		return otvorenaPolja;
+		for (PoljeRes[] redPolja: polja) 
+			for (PoljeRes polje: redPolja) 
+				if (!polje.otvoreno && !polje.minaObelezeno)
+					for (PoljeRes susednoPolje: polje.susednaPolja) {
+						if (!susednoPolje.otvoreno && !susednoPolje.minaObelezeno) 
+							break;
+						marginalnaPolja.add(polje);
+					}
+		return marginalnaPolja;
 	}
 	
 	private static void susednaPoljaInit(int m, int n, PoljeRes[][] polja) {
@@ -164,8 +183,6 @@ public class Resavac {
 			for (PoljeRes polje: redPolja) 
 				polje.susednaPoljaInit(m, n, polja);
 	}
-
-	
 	
 	private static double min(double a, double b) {
 		if (a < b) 
