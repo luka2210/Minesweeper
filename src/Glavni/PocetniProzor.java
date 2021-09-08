@@ -9,7 +9,6 @@ import javax.swing.JOptionPane;
 import java.awt.Button;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import javax.swing.JPanel;
 import javax.swing.JLabel;
 import java.awt.Color;
 import java.awt.Panel;
@@ -55,7 +54,7 @@ public class PocetniProzor {
 		frame = new JFrame();
 		frame.setBounds(100, 100, 389, 300);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		//frame.setResizable(false);
+		frame.setResizable(false);
 		frame.getContentPane().setLayout(null);
 		
 		unosBrPoljaM = new JTextField();
@@ -75,45 +74,45 @@ public class PocetniProzor {
 		
 		Panel panel = new Panel();
 		panel.setBackground(new Color(0, 102, 255));
-		panel.setBounds(0, 0, 373, 34);
+		panel.setBounds(0, 0, 373, 39);
 		frame.getContentPane().add(panel);
 		panel.setLayout(null);
 		
 		lblNewLabel = new JLabel("Миноловац");
 		lblNewLabel.setFont(new Font("Tahoma", Font.BOLD, 17));
 		lblNewLabel.setForeground(new Color(255, 255, 255));
-		lblNewLabel.setBounds(10, 0, 103, 33);
+		lblNewLabel.setBounds(10, 0, 103, 39);
 		panel.add(lblNewLabel);
 		
 		Panel panel_1 = new Panel();
 		panel_1.setBackground(new Color(221, 221, 221));
-		panel_1.setBounds(0, 34, 373, 34);
+		panel_1.setBounds(0, 35, 373, 46);
 		frame.getContentPane().add(panel_1);
 		panel_1.setLayout(null);
 		
 		JLabel lblNewLabel_2 = new JLabel("Висина");
 		lblNewLabel_2.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		lblNewLabel_2.setBounds(159, 11, 57, 23);
+		lblNewLabel_2.setBounds(157, 23, 57, 23);
 		panel_1.add(lblNewLabel_2);
 		
 		JLabel lblNewLabel_2_1 = new JLabel("Ширина");
 		lblNewLabel_2_1.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		lblNewLabel_2_1.setBounds(226, 11, 57, 23);
+		lblNewLabel_2_1.setBounds(224, 23, 57, 23);
 		panel_1.add(lblNewLabel_2_1);
 		
 		JLabel lblNewLabel_2_1_1 = new JLabel("Мине");
 		lblNewLabel_2_1_1.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		lblNewLabel_2_1_1.setBounds(293, 11, 57, 23);
+		lblNewLabel_2_1_1.setBounds(291, 23, 57, 23);
 		panel_1.add(lblNewLabel_2_1_1);
 		
 		JRadioButton radio1 = new JRadioButton("   Лако ");
 		radio1.setFont(new Font("Tahoma", Font.BOLD, 17));
-		radio1.setBounds(0, 74, 109, 23);
+		radio1.setBounds(0, 87, 109, 23);
 		frame.getContentPane().add(radio1);
 		
 		JRadioButton radio2 = new JRadioButton("   Средње ");
 		radio2.setFont(new Font("Tahoma", Font.BOLD, 17));
-		radio2.setBounds(0, 112, 121, 23);
+		radio2.setBounds(0, 117, 121, 23);
 		frame.getContentPane().add(radio2);
 		
 		JRadioButton radio3 = new JRadioButton("   Тешко");
@@ -131,35 +130,36 @@ public class PocetniProzor {
 	    group.add(radio2);
 	    group.add(radio3);
 	    group.add(radio4);
+	    radio1.setSelected(true);
 		
 		JLabel lblNewLabel_1 = new JLabel("10");
 		lblNewLabel_1.setFont(new Font("Tahoma", Font.PLAIN, 17));
-		lblNewLabel_1.setBounds(163, 74, 23, 20);
+		lblNewLabel_1.setBounds(163, 87, 23, 20);
 		frame.getContentPane().add(lblNewLabel_1);
 		
 		JLabel lblNewLabel_1_1 = new JLabel("10");
 		lblNewLabel_1_1.setFont(new Font("Tahoma", Font.PLAIN, 17));
-		lblNewLabel_1_1.setBounds(231, 74, 23, 20);
+		lblNewLabel_1_1.setBounds(231, 87, 23, 20);
 		frame.getContentPane().add(lblNewLabel_1_1);
 		
 		JLabel lblNewLabel_1_2 = new JLabel("10");
 		lblNewLabel_1_2.setFont(new Font("Tahoma", Font.PLAIN, 17));
-		lblNewLabel_1_2.setBounds(299, 74, 23, 20);
+		lblNewLabel_1_2.setBounds(299, 87, 23, 20);
 		frame.getContentPane().add(lblNewLabel_1_2);
 		
 		JLabel lblNewLabel_1_3 = new JLabel("16");
 		lblNewLabel_1_3.setFont(new Font("Tahoma", Font.PLAIN, 17));
-		lblNewLabel_1_3.setBounds(163, 112, 23, 20);
+		lblNewLabel_1_3.setBounds(163, 117, 23, 20);
 		frame.getContentPane().add(lblNewLabel_1_3);
 		
 		JLabel lblNewLabel_1_1_1 = new JLabel("16");
 		lblNewLabel_1_1_1.setFont(new Font("Tahoma", Font.PLAIN, 17));
-		lblNewLabel_1_1_1.setBounds(231, 112, 23, 20);
+		lblNewLabel_1_1_1.setBounds(231, 117, 23, 20);
 		frame.getContentPane().add(lblNewLabel_1_1_1);
 		
 		JLabel lblNewLabel_1_2_1 = new JLabel("40");
 		lblNewLabel_1_2_1.setFont(new Font("Tahoma", Font.PLAIN, 17));
-		lblNewLabel_1_2_1.setBounds(299, 112, 23, 20);
+		lblNewLabel_1_2_1.setBounds(299, 117, 23, 20);
 		frame.getContentPane().add(lblNewLabel_1_2_1);
 		
 		JLabel lblNewLabel_1_3_1 = new JLabel("16");
@@ -206,7 +206,6 @@ public class PocetniProzor {
 	
 	private void otvoriGlavniProzor(int m, int n, int brMina) {
 		GlavniProzor gp = new GlavniProzor(m, n, brMina, 100, 100);
-		gp.frame.setVisible(true);
 	}
 	
 	private void proveriUnos() {
