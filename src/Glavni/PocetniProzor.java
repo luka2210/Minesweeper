@@ -2,12 +2,19 @@ package Glavni;
 
 import java.awt.EventQueue;
 
+import javax.swing.ButtonGroup;
 import javax.swing.JFrame;
 import javax.swing.JTextField;
 import javax.swing.JOptionPane;
 import java.awt.Button;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import javax.swing.JPanel;
+import javax.swing.JLabel;
+import java.awt.Color;
+import java.awt.Panel;
+import java.awt.Font;
+import javax.swing.JRadioButton;
 
 public class PocetniProzor {
 
@@ -16,7 +23,7 @@ public class PocetniProzor {
 	private JTextField unosBrPoljaN;
 	private JTextField unosBrMina;
 	
-	private Integer m, n, brMina;
+	private JLabel lblNewLabel;
 	
 	/**
 	 * Launch the application.
@@ -46,60 +53,187 @@ public class PocetniProzor {
 	 */
 	private void initialize() {
 		frame = new JFrame();
-		frame.setBounds(100, 100, 450, 300);
+		frame.setBounds(100, 100, 389, 300);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setResizable(false);
+		//frame.setResizable(false);
 		frame.getContentPane().setLayout(null);
 		
 		unosBrPoljaM = new JTextField();
-		unosBrPoljaM.setBounds(102, 47, 86, 20);
+		unosBrPoljaM.setBounds(163, 189, 46, 20);
 		frame.getContentPane().add(unosBrPoljaM);
 		unosBrPoljaM.setColumns(10);
 		
 		unosBrPoljaN = new JTextField();
-		unosBrPoljaN.setBounds(102, 86, 86, 20);
+		unosBrPoljaN.setBounds(231, 189, 46, 20);
 		frame.getContentPane().add(unosBrPoljaN);
 		unosBrPoljaN.setColumns(10);
 		
 		unosBrMina = new JTextField();
-		unosBrMina.setBounds(102, 124, 86, 20);
+		unosBrMina.setBounds(299, 189, 46, 20);
 		frame.getContentPane().add(unosBrMina);
 		unosBrMina.setColumns(10);
 		
-		Button button = new Button("New button");
+		Panel panel = new Panel();
+		panel.setBackground(new Color(0, 102, 255));
+		panel.setBounds(0, 0, 373, 34);
+		frame.getContentPane().add(panel);
+		panel.setLayout(null);
+		
+		lblNewLabel = new JLabel("Миноловац");
+		lblNewLabel.setFont(new Font("Tahoma", Font.BOLD, 17));
+		lblNewLabel.setForeground(new Color(255, 255, 255));
+		lblNewLabel.setBounds(10, 0, 103, 33);
+		panel.add(lblNewLabel);
+		
+		Panel panel_1 = new Panel();
+		panel_1.setBackground(new Color(221, 221, 221));
+		panel_1.setBounds(0, 34, 373, 34);
+		frame.getContentPane().add(panel_1);
+		panel_1.setLayout(null);
+		
+		JLabel lblNewLabel_2 = new JLabel("Висина");
+		lblNewLabel_2.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		lblNewLabel_2.setBounds(159, 11, 57, 23);
+		panel_1.add(lblNewLabel_2);
+		
+		JLabel lblNewLabel_2_1 = new JLabel("Ширина");
+		lblNewLabel_2_1.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		lblNewLabel_2_1.setBounds(226, 11, 57, 23);
+		panel_1.add(lblNewLabel_2_1);
+		
+		JLabel lblNewLabel_2_1_1 = new JLabel("Мине");
+		lblNewLabel_2_1_1.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		lblNewLabel_2_1_1.setBounds(293, 11, 57, 23);
+		panel_1.add(lblNewLabel_2_1_1);
+		
+		JRadioButton radio1 = new JRadioButton("   Лако ");
+		radio1.setFont(new Font("Tahoma", Font.BOLD, 17));
+		radio1.setBounds(0, 74, 109, 23);
+		frame.getContentPane().add(radio1);
+		
+		JRadioButton radio2 = new JRadioButton("   Средње ");
+		radio2.setFont(new Font("Tahoma", Font.BOLD, 17));
+		radio2.setBounds(0, 112, 121, 23);
+		frame.getContentPane().add(radio2);
+		
+		JRadioButton radio3 = new JRadioButton("   Тешко");
+		radio3.setFont(new Font("Tahoma", Font.BOLD, 17));
+		radio3.setBounds(0, 152, 121, 23);
+		frame.getContentPane().add(radio3);
+		
+		JRadioButton radio4 = new JRadioButton("   Унеси сам");
+		radio4.setFont(new Font("Tahoma", Font.BOLD, 17));
+		radio4.setBounds(0, 186, 139, 23);
+		frame.getContentPane().add(radio4);
+		
+		ButtonGroup group = new ButtonGroup();
+	    group.add(radio1);
+	    group.add(radio2);
+	    group.add(radio3);
+	    group.add(radio4);
+		
+		JLabel lblNewLabel_1 = new JLabel("10");
+		lblNewLabel_1.setFont(new Font("Tahoma", Font.PLAIN, 17));
+		lblNewLabel_1.setBounds(163, 74, 23, 20);
+		frame.getContentPane().add(lblNewLabel_1);
+		
+		JLabel lblNewLabel_1_1 = new JLabel("10");
+		lblNewLabel_1_1.setFont(new Font("Tahoma", Font.PLAIN, 17));
+		lblNewLabel_1_1.setBounds(231, 74, 23, 20);
+		frame.getContentPane().add(lblNewLabel_1_1);
+		
+		JLabel lblNewLabel_1_2 = new JLabel("10");
+		lblNewLabel_1_2.setFont(new Font("Tahoma", Font.PLAIN, 17));
+		lblNewLabel_1_2.setBounds(299, 74, 23, 20);
+		frame.getContentPane().add(lblNewLabel_1_2);
+		
+		JLabel lblNewLabel_1_3 = new JLabel("16");
+		lblNewLabel_1_3.setFont(new Font("Tahoma", Font.PLAIN, 17));
+		lblNewLabel_1_3.setBounds(163, 112, 23, 20);
+		frame.getContentPane().add(lblNewLabel_1_3);
+		
+		JLabel lblNewLabel_1_1_1 = new JLabel("16");
+		lblNewLabel_1_1_1.setFont(new Font("Tahoma", Font.PLAIN, 17));
+		lblNewLabel_1_1_1.setBounds(231, 112, 23, 20);
+		frame.getContentPane().add(lblNewLabel_1_1_1);
+		
+		JLabel lblNewLabel_1_2_1 = new JLabel("40");
+		lblNewLabel_1_2_1.setFont(new Font("Tahoma", Font.PLAIN, 17));
+		lblNewLabel_1_2_1.setBounds(299, 112, 23, 20);
+		frame.getContentPane().add(lblNewLabel_1_2_1);
+		
+		JLabel lblNewLabel_1_3_1 = new JLabel("16");
+		lblNewLabel_1_3_1.setFont(new Font("Tahoma", Font.PLAIN, 17));
+		lblNewLabel_1_3_1.setBounds(163, 152, 23, 20);
+		frame.getContentPane().add(lblNewLabel_1_3_1);
+		
+		JLabel lblNewLabel_1_1_1_1 = new JLabel("30");
+		lblNewLabel_1_1_1_1.setFont(new Font("Tahoma", Font.PLAIN, 17));
+		lblNewLabel_1_1_1_1.setBounds(231, 152, 23, 20);
+		frame.getContentPane().add(lblNewLabel_1_1_1_1);
+		
+		JLabel lblNewLabel_1_2_1_1 = new JLabel("99");
+		lblNewLabel_1_2_1_1.setFont(new Font("Tahoma", Font.PLAIN, 17));
+		lblNewLabel_1_2_1_1.setBounds(299, 152, 23, 20);
+		frame.getContentPane().add(lblNewLabel_1_2_1_1);
+		
+		Panel panel_1_1 = new Panel();
+		panel_1_1.setLayout(null);
+		panel_1_1.setBackground(new Color(221, 221, 221));
+		panel_1_1.setBounds(0, 215, 373, 46);
+		frame.getContentPane().add(panel_1_1);
+		
+		Button button = new Button("Нова игра");
+		button.setFont(new Font("Dialog", Font.BOLD, 17));
+		button.setBackground(new Color(0, 102, 255));
+		button.setForeground(new Color(255, 255, 255));
+		button.setBounds(10, 7, 147, 32);
+		panel_1_1.add(button);
 		button.addMouseListener(new MouseAdapter() {
 			@Override
-			public void mousePressed(MouseEvent e) {
-				if (!proveriUnos()) return;
-				otvoriGlavniProzor();
+			public void mouseClicked(MouseEvent e) {
+				if (radio1.isSelected()) 
+					otvoriGlavniProzor(10, 10, 10);
+				else if (radio2.isSelected())
+					otvoriGlavniProzor(16, 16, 40);
+				else if (radio3.isSelected()) 
+					otvoriGlavniProzor(16, 30, 99);
+				else 
+					proveriUnos();
 			}
 		});
-		button.setBounds(102, 160, 86, 22);
-		frame.getContentPane().add(button);
 	}
 	
-	private void otvoriGlavniProzor() {
+	private void otvoriGlavniProzor(int m, int n, int brMina) {
 		GlavniProzor gp = new GlavniProzor(m, n, brMina, 100, 100);
+		gp.frame.setVisible(true);
 	}
 	
-	private boolean proveriUnos() {
+	private void proveriUnos() {
 		try {
-			if (unosBrPoljaM.getText().isBlank() || unosBrPoljaN.getText().isBlank() || unosBrMina.getText().isBlank()) throw new Exception("Нисте попунили сва поља!");
-			m = Integer.parseInt(unosBrPoljaM.getText());
-			n = Integer.parseInt(unosBrPoljaN.getText());
-			brMina = Integer.parseInt(unosBrMina.getText());
-			if (!(inRange(m, 10, 40))) throw new Exception("Висина табле мора бити цео број између 10 и 40.");
-			if (!(inRange(n, 10, 80))) throw new Exception("Ширина табле мора бити цео број између 10 и 80.");
-			if (!(inRange(brMina, 1, n * m - 9))) throw new Exception("Број мина за унете димензије табле мора бити цео број између 1 и " + (n * m - 9) + ".");
-			return true;
+			if (unosBrPoljaM.getText().isBlank() || unosBrPoljaN.getText().isBlank() || unosBrMina.getText().isBlank()) 
+				throw new Exception("Нисте попунили сва поља!");
+			
+			int m = Integer.parseInt(unosBrPoljaM.getText());
+			int n = Integer.parseInt(unosBrPoljaN.getText());
+			int brMina = Integer.parseInt(unosBrMina.getText());
+			
+			if (!(inRange(m, 10, 30))) 
+				throw new Exception("Висина табле мора бити цео број између 10 и 30.");
+			if (!(inRange(n, 10, 50))) 
+				throw new Exception("Ширина табле мора бити цео број између 10 и 50.");
+			if (brMina > 999) 
+				throw new Exception("Број мина не сме бити већи од 999.");
+			if (!(inRange(brMina, 1, n * m - 9))) 
+				throw new Exception("Број мина за унете димензије табле мора бити цео број између 1 и " + (n * m - 9) + ".");
+			
+			otvoriGlavniProzor(m, n, brMina);
 		}
 		catch (NumberFormatException err) {
 			JOptionPane.showMessageDialog(null, "Унете вредности морају бити цели бројеви.", "Грешка уноса", JOptionPane.INFORMATION_MESSAGE);
-			return false;
 		}
 		catch (Exception err) {
 			JOptionPane.showMessageDialog(null, err.getMessage(), "Грешка уноса", JOptionPane.INFORMATION_MESSAGE);
-			return false;
 		}
 	}
 	
