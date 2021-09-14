@@ -20,7 +20,7 @@ public class Resavac {
 		
 		//ako je prvi klik
 		if (prviKlik) 
-			return polja[m / 2][n / 3];
+			return polja[m/2][n/2];
 		
 		//odredi susedna polja svakog polja
 		Resavac.susednaPoljaInit(m, n, polja);
@@ -171,7 +171,7 @@ public class Resavac {
 			for (PoljeRes polje: redPolja) 
 				if (!polje.otvoreno && !polje.minaObelezeno)
 					for (PoljeRes susednoPolje: polje.susednaPolja) {
-						if (!susednoPolje.otvoreno && !susednoPolje.minaObelezeno) 
+						if (!susednoPolje.otvoreno) 
 							break;
 						marginalnaPolja.add(polje);
 					}

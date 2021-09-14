@@ -29,7 +29,7 @@ public class GlavniProzor {
 	Integer brNeobelezenihMina;
 	boolean prviKlik;
 	
-	JLabel cifra1, cifra2, cifra3;
+	private JLabel cifra1, cifra2, cifra3;
 	JLabel dugmeReset;
 	
 	Timer timer;
