@@ -33,11 +33,12 @@ public class Resavac {
 		
 		//napravi listu svih neotvorenih polja nija nisu obelezena kao mine i koja nemaju susedna otvorena polja
 		Resavac.nadjiMarginalnaPolja(polja);
-			
+		
+		
 		//ako nema otvorenih vrati random polje
 		if (otvorenaPolja.isEmpty())
 			return marginalnaPolja.get(marginalnaPolja.size() / 2);
-		
+				
 		//ako postoji otvoreno polje oko kojih sigurno nema mina 
 		//ili neotvoreno koje je sigurno mina
 		for (PoljeRes polje: otvorenaPolja) {
@@ -63,7 +64,7 @@ public class Resavac {
 		
 		//poziv rekurzivne funkcije koja proverava sve kombinacije
 		brResenja = 0;
-		Resavac.prostaRekurzija(0, neotvorenaPolja.size());
+		Resavac.nadjiResenjaRekurzija(0, neotvorenaPolja.size());
 		
 		//izracunaj verovatnocu da na svakom polju bude mina
 		System.out.println();
@@ -75,17 +76,19 @@ public class Resavac {
 		
 		//odredi koje polje ima najvecu verovatnocu da se na njemu nalazi ili ne nalazi mina
 		resenje = neotvorenaPolja.get(0);
-		for (PoljeRes polje: neotvorenaPolja) 
+		for (PoljeRes polje: neotvorenaPolja) {
 			if (min(polje.verovatnoca, 1.0 - polje.verovatnoca) < min(resenje.verovatnoca, 1.0 - resenje.verovatnoca)) 
 				resenje = polje;
+		}
 		
+		//ako je verovatnoca veca od 0.5 onda desni klik
 		if (resenje.verovatnoca > 0.5)
 			resenje.klik = 2;
 	
 		return resenje;
 	}
 	
-	private static void prostaRekurzija(int i, int n) {
+	private static void nadjiResenjaRekurzija(int i, int n) {
 		if (i == n) {
 			for (PoljeRes polje: neotvorenaPolja) 
 				if (polje.minaObelezeno)
@@ -101,7 +104,7 @@ public class Resavac {
 			for (PoljeRes susednoOtvoreno: trPolje.susednaPoljaOtvorena) 
 				susednoOtvoreno.brSusednihNeotvorenih--;
 			
-			prostaRekurzija(i + 1, n);
+			nadjiResenjaRekurzija(i + 1, n);
 			
 			for (PoljeRes susednoOtvoreno: trPolje.susednaPoljaOtvorena) 
 				susednoOtvoreno.brSusednihNeotvorenih++;
@@ -114,7 +117,7 @@ public class Resavac {
 			}
 			
 			trPolje.minaObelezeno = true;
-			prostaRekurzija(i + 1, n);
+			nadjiResenjaRekurzija(i + 1, n);
 			trPolje.minaObelezeno = false;
 			
 			for (PoljeRes susednoOtvoreno: trPolje.susednaPoljaOtvorena) { 
@@ -169,12 +172,16 @@ public class Resavac {
 		
 		for (PoljeRes[] redPolja: polja) 
 			for (PoljeRes polje: redPolja) 
-				if (!polje.otvoreno && !polje.minaObelezeno)
-					for (PoljeRes susednoPolje: polje.susednaPolja) {
-						if (!susednoPolje.otvoreno) 
+				if (!polje.otvoreno && !polje.minaObelezeno) {
+					boolean flagTmp = true;
+					for (PoljeRes susednoPolje: polje.susednaPolja) 
+						if (susednoPolje.otvoreno) {
+							flagTmp = false;
 							break;
+						}
+					if (flagTmp)
 						marginalnaPolja.add(polje);
-					}
+				}
 		return marginalnaPolja;
 	}
 	

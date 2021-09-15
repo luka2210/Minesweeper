@@ -30,7 +30,7 @@ public class GlavniProzor {
 	boolean prviKlik;
 	
 	private JLabel cifra1, cifra2, cifra3;
-	JLabel dugmeReset;
+	JLabel dugmeSmajli;
 	
 	Timer timer;
 	int prosloVreme;
@@ -55,7 +55,7 @@ public class GlavniProzor {
 		this.prviKlik = true;
 		this.gameWon = false;
 		this.gameLost = false;
-		this.delay = 50;
+		this.delay = 60;
 		initialize();
 	}
 
@@ -71,15 +71,15 @@ public class GlavniProzor {
 		frame.setResizable(false);
 		frame.setVisible(true);
 		
-		dugmeReset = new JLabel("");
-		dugmeReset.addMouseListener(new MouseAdapter() {
+		dugmeSmajli = new JLabel("");
+		dugmeSmajli.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mousePressed(MouseEvent e) {
-				dugmeReset.setIcon(new ImageIcon(PocetniProzor.class.getResource("/Slike/dugmeResetPressed.png")));
+				dugmeSmajli.setIcon(new ImageIcon(PocetniProzor.class.getResource("/Slike/dugmeResetPressed.png")));
 			}
 			@Override
 			public void mouseReleased(MouseEvent e) {
-				dugmeReset.setIcon(new ImageIcon(PocetniProzor.class.getResource("/Slike/dugmeReset.png")));
+				dugmeSmajli.setIcon(new ImageIcon(PocetniProzor.class.getResource("/Slike/dugmeReset.png")));
 			}
 			@Override 
 			public void mouseClicked(MouseEvent e) {
@@ -89,6 +89,7 @@ public class GlavniProzor {
 				}
 				else if (SwingUtilities.isMiddleMouseButton(e)) {
 					ukljuciResavac();
+					autoSolve = false;
 				}
 				else {
 					frame.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
@@ -96,9 +97,9 @@ public class GlavniProzor {
 				}
 			}
 		});
-		dugmeReset.setBounds(frame.getWidth() / 2 - 28, 10, 40, 40);
-		dugmeReset.setIcon(new ImageIcon(PocetniProzor.class.getResource("/Slike/dugmeReset.png")));
-		frame.getContentPane().add(dugmeReset);
+		dugmeSmajli.setBounds(frame.getWidth() / 2 - 28, 10, 40, 40);
+		dugmeSmajli.setIcon(new ImageIcon(PocetniProzor.class.getResource("/Slike/dugmeReset.png")));
+		frame.getContentPane().add(dugmeSmajli);
 		
 		cifra1 = new JLabel("");
 		cifra1.setBounds(0, 10, 27, 40);

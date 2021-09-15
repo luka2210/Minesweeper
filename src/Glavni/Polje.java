@@ -238,7 +238,7 @@ public class Polje {
 					polje.label.setIcon(new ImageIcon(PocetniProzor.class.getResource("/Slike/poljeObelezeno.png")));
 				polje.otvoreno = true;
 			}
-		gp.dugmeReset.setIcon(new ImageIcon(PocetniProzor.class.getResource("/Slike/dugmeResetWon.png")));
+		gp.dugmeSmajli.setIcon(new ImageIcon(PocetniProzor.class.getResource("/Slike/dugmeResetWon.png")));
 		
 		gp.brNeobelezenihMina = 0;
 		gp.ispisiBrojNeobelezenihMina();
@@ -255,7 +255,7 @@ public class Polje {
 					polje.label.setIcon(new ImageIcon(PocetniProzor.class.getResource("/Slike/poljePogresnoObelezeno.png")));
 				polje.otvoreno = true;
 			}
-		gp.dugmeReset.setIcon(new ImageIcon(PocetniProzor.class.getResource("/Slike/dugmeResetLost.png")));
+		gp.dugmeSmajli.setIcon(new ImageIcon(PocetniProzor.class.getResource("/Slike/dugmeResetLost.png")));
 		
 		gp.timer.stop();
 		gp.gameLost = true;
